@@ -11,8 +11,12 @@ int main() {
     // chord->join(50);
 
 
-    int nodeNum = 3;
-    chord->joinNodes(nodeNum);
+    // int nodeNum = 4;
+    // chord->joinNodes(nodeNum);
+    chord->createFirstNode();
+    chord->join(80);
+    chord->join(102);
+    // chord->join(19);
 
     chord->showNodeList();
     chord->showNodesFingerTable();

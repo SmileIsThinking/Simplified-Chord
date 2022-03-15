@@ -58,13 +58,12 @@ int Chord::getSuccPred(int ID) {
 }
 
 void Chord::notifySucc(int ID) {
-    showPred(50);
     Node* node = routing(ID);
-    cout << "notify from: " << node->ID << endl;
+    // cout << "notify from: " << node->ID << endl;
     int succ_pred = getSuccPred(ID);
     cout << "succ_pred: " << succ_pred << endl;
     if(succ_pred == -1) {
-        cout << "update Succ Pred: " << ID << endl;
+        // cout << "update Succ Pred: " << ID << endl;
         updateSuccPred(ID);
         return;
     }
@@ -75,13 +74,14 @@ void Chord::notifySucc(int ID) {
             // node | succ_pred (new node) | successor
             // update my successor
             node->fingerTable[0] = succ_pred;
+            notifySucc(node->ID);
         }else {
             // succ_pred | node (new node) | successor
             // update successor's predecessor
             updateSuccPred(ID);
         }
     }
-    showPred(50);
+    // showPred(50);
     return;
 }
 
@@ -98,8 +98,9 @@ void Chord::updateSuccPred(int ID) {
     Node* node = routing(ID);
     int succ = node->fingerTable[0];
     node = routing(succ);
-    cout << "update node: " << node->ID << endl;
+    // cout << "update node: " << node->ID << endl;
     node->predecessor = ID;
+    cout << "new pred: " << node->predecessor << endl;
     // for(int i = 0; i < node->m; i++) {
     //     if(node->fingerTable[i] == node->ID) {
     //         int dist1 = node->getDistance(node->ID, node->ID + pow(2, i));
@@ -154,13 +155,17 @@ void Chord::join(int ID) {
     node->fingerTable[0] = findSuccessor(msg);
 
     for(int i = 0; i < nodeNum; i++) {
-        cout << "predecessor: " << node->predecessor << endl;
-        cout << "successor: " << node->fingerTable[0] << endl;
+        // cout << "predecessor: " << node->predecessor << endl;
+        // cout << "successor: " << node->fingerTable[0] << endl;
+        cout << "Your turn to notify: " << node->ID << endl;
         notifySucc(node->ID);
         node = routing(node->fingerTable[0]);
-        cout << "predecessor: " << node->predecessor << endl;
-        cout << "successor: " << node->fingerTable[0] << endl;
+        // cout << "predecessor: " << node->predecessor << endl;
+        // cout << "successor: " << node->fingerTable[0] << endl;
     }
+    showPred(0);
+    showPred(80);
+    showPred(102);
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);
         updateFingerTable(node->ID);
@@ -178,7 +183,11 @@ void Chord::joinNodes(int num) {
     uniform_int_distribution<mt19937::result_type> dist(1, size-1);
     for(int i = 0; i < num-1; i++) {
         int newID = dist(rng);
-        join(newID);
+        if(indexes.find(newID) == indexes.end()){
+            cout << "!!!!!!!" << endl;
+            cout << "New Node: " << newID << endl;
+            join(newID);
+        }
     }
 }
 

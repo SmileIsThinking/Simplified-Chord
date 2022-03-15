@@ -30,13 +30,17 @@ int Node::getValue(int key) {
     return storage[key];
 }
 
+
+
 // ID1: this->ID
 // ID2: key/next node
 int Node::getDistance(int ID1, int ID2) {
-    if(ID1 <= ID2) {
-        return (ID2 - ID1);
+    int r1 = ID1 % (this->size);
+    int r2 = ID2 % (this->size);
+    if(r1 <= r2) {
+        return (r2 - r1);
     }else {
-        return (size - ID1 + ID2);
+        return (size - r1 + r2);
     }
 }
 
