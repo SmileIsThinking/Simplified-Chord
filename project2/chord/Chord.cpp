@@ -126,13 +126,14 @@ void Chord::updateSuccPred(int ID) {
 void Chord::updateFingerTable(int ID) {
     Node* node = routing(ID);
     for(int i = 1; i < node->m; i++) {
+        cout << "m: " << node->m << endl;
         int dist1 = pow(2, i);
-        int dist2 = node->fingerTable[0] - node->ID;
+        int dist2 = node->getDistance(node->ID, node->fingerTable[0]);
         if(dist1 <= dist2) {
             node->fingerTable[i] = node->fingerTable[0];
         }else {
-            int key = node->ID + pow(2, i);
-            int nextHop = node->fingerTable[0];
+            int key = (int)(node->ID + pow(2, i)) % (node->size);
+            int nextHop = node->fingerTable[i-1];
             Message* msg = new Message(key, nextHop, 0);
             node->fingerTable[i] = findSuccessor(msg);
         }
@@ -163,12 +164,14 @@ void Chord::join(int ID) {
         // cout << "predecessor: " << node->predecessor << endl;
         // cout << "successor: " << node->fingerTable[0] << endl;
     }
-    showPred(0);
-    showPred(80);
-    showPred(102);
+    // showPred(0);
+    // showPred(80);
+    // showPred(102);
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);
         updateFingerTable(node->ID);
+        cout << "You have modify the fingertable: " << node->ID << endl;
+        showFingerTable(node->ID);
     }
 }
 

@@ -47,6 +47,7 @@ int Node::getDistance(int ID1, int ID2) {
 Message* Node::lookup(Message* msg) {
     // cout << "lookup" << endl;
     if(msg->flag == 1) {
+        cout << "This Hop: " << msg->nextHop << endl;
         msg->flag = 2;
         msg->nextHop = this->ID;
         this->exist = ifExist(msg->key);
@@ -56,6 +57,7 @@ Message* Node::lookup(Message* msg) {
         return msg;
     }
     else if(msg->flag == 0) {
+        cout << "This Hop: " << msg->nextHop << endl;
         int i = 0;
         int dist1 = getDistance(this->ID, fingerTable[i]);
         int dist2 = getDistance(this->ID, msg->key);
@@ -79,6 +81,7 @@ Message* Node::lookup(Message* msg) {
             }
         }
     }
+    // cout << "This Hop: " << msg->nextHop << endl;
 
     return msg;
 }
