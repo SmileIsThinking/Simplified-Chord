@@ -49,7 +49,7 @@ int Node::getDistance(int ID1, int ID2) {
 Message* Node::lookup(Message* msg) {
     // cout << "lookup" << endl;
     if(msg->flag == 1) {
-        cout << "This Hop: " << msg->nextHop << endl;
+        // cout << "This Hop: " << msg->nextHop << endl;
         // this_thread::sleep_for(std::chrono::milliseconds(100));
         msg->flag = 2;
         msg->nextHop = this->ID;
@@ -60,7 +60,7 @@ Message* Node::lookup(Message* msg) {
         return msg;
     }
     else if(msg->flag == 0) {
-        cout << "This Hop: " << msg->nextHop << endl;
+        // cout << "This Hop: " << msg->nextHop << endl;
         // this_thread::sleep_for(std::chrono::milliseconds(100));
         int i = 0;
         // int dist1 = getDistance(this->ID, fingerTable[i]);
@@ -104,9 +104,9 @@ KeyValue* Node::insert(KeyValue* msg) {
     }
     else if(msg->flag == 0) {
         int i = 0;
+        for(i = 0; i < m; i++){
         int dist1 = getDistance(this->ID, fingerTable[i]);
         int dist2 = getDistance(this->ID, msg->key);
-        for(i = 0; i < m; i++){
             if(dist1 <= dist2) {
                 msg->nextHop = fingerTable[i];
             }else {

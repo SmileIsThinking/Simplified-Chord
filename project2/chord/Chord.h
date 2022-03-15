@@ -87,6 +87,11 @@ public:
     void showNodesFingerTable();
 
     void showPred(int ID);
+
+    void insertValue(int key, int value);
+    void insertMultiValues(int length, int* keys, int* values);
+    void findKey(int key);
+    void findMultiKeys(int length, int* keys);
 };
 
 #endif

@@ -52,7 +52,7 @@ int Chord::findSuccessor(Message* msg) {
 int Chord::getSuccPred(int ID) {
     Node* node = routing(ID);
     int succ = node->fingerTable[0];
-    cout << "Succ: " << succ << endl;
+    // cout << "Succ: " << succ << endl;
     node = routing(succ);
     return node->predecessor;
 }
@@ -61,7 +61,7 @@ void Chord::notifySucc(int ID) {
     Node* node = routing(ID);
     // cout << "notify from: " << node->ID << endl;
     int succ_pred = getSuccPred(ID);
-    cout << "succ_pred: " << succ_pred << endl;
+    // cout << "succ_pred: " << succ_pred << endl;
     if(succ_pred == -1) {
         // cout << "update Succ Pred: " << ID << endl;
         updateSuccPred(ID);
@@ -100,7 +100,7 @@ void Chord::updateSuccPred(int ID) {
     node = routing(succ);
     // cout << "update node: " << node->ID << endl;
     node->predecessor = ID;
-    cout << "new pred: " << node->predecessor << endl;
+    // cout << "new pred: " << node->predecessor << endl;
     // for(int i = 0; i < node->m; i++) {
     //     if(node->fingerTable[i] == node->ID) {
     //         int dist1 = node->getDistance(node->ID, node->ID + pow(2, i));
@@ -126,7 +126,7 @@ void Chord::updateSuccPred(int ID) {
 void Chord::updateBasicFingerTable(int ID) {
     Node* node = routing(ID);
     for(int i = 1; i < node->m; i++) {
-        cout << "m: " << node->m << endl;
+        // cout << "m: " << node->m << endl;
         int dist1 = pow(2, i);
         int dist2 = node->getDistance(node->ID, node->fingerTable[0]);
         if(dist1 <= dist2) {
@@ -139,14 +139,14 @@ void Chord::updateBasicFingerTable(int ID) {
 void Chord::updateFingerTable(int ID) {
     Node* node = routing(ID);
     for(int i = 1; i < node->m; i++) {
-        cout << "m: " << node->m << endl;
+        // cout << "m: " << node->m << endl;
         int dist1 = pow(2, i);
         int dist2 = node->getDistance(node->ID, node->fingerTable[0]);
         if(dist1 <= dist2) {
             node->fingerTable[i] = node->fingerTable[0];
         }else {
             int key = (int)(node->ID + pow(2, i)) % (node->size);
-            cout << "i: " << i << endl;
+            // cout << "i: " << i << endl;
             int nextHop = node->fingerTable[i-1];
             Message* msg = new Message(key, nextHop, 0);
             node->fingerTable[i] = findSuccessor(msg);
@@ -159,9 +159,7 @@ void Chord::updateFingerTable(int ID) {
 void Chord::join(int ID) {
     createNewNode(ID);
     Node* node = routing(ID);
-    // this->nodeNum++;
-    // this->nodeRouter.emplace_back(node);
-    // this->indexes[ID] =
+
     // join Chord Network by public node 0
     int nextHop = 0;
     int key = ID+1;
@@ -170,13 +168,9 @@ void Chord::join(int ID) {
     node->fingerTable[0] = findSuccessor(msg);
 
     for(int i = 0; i < nodeNum; i++) {
-        // cout << "predecessor: " << node->predecessor << endl;
-        // cout << "successor: " << node->fingerTable[0] << endl;
-        cout << "Your turn to notify: " << node->ID << endl;
+        // cout << "Your turn to notify: " << node->ID << endl;
         notifySucc(node->ID);
         node = routing(node->fingerTable[0]);
-        // cout << "predecessor: " << node->predecessor << endl;
-        // cout << "successor: " << node->fingerTable[0] << endl;
     }
     // showPred(0);
     // showPred(80);
@@ -184,15 +178,15 @@ void Chord::join(int ID) {
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);
         updateBasicFingerTable(node->ID);
-        cout << "You have modify the basic fingertable: " << node->ID << endl;
-        showFingerTable(node->ID);
+        // cout << "You have modify the basic fingertable: " << node->ID << endl;
+        // showFingerTable(node->ID);
     }
 
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);
         updateFingerTable(node->ID);
-        cout << "You have modify the fingertable: " << node->ID << endl;
-        showFingerTable(node->ID);
+        // cout << "You have modify the fingertable: " << node->ID << endl;
+        // showFingerTable(node->ID);
     }
 }
 
@@ -212,6 +206,52 @@ void Chord::joinNodes(int num) {
             cout << "New Node: " << newID << endl;
             join(newID);
         }
+    }
+}
+
+void Chord::insertValue(int key, int value) {
+    Message* msg = new Message(key, 0, 0);
+    int target = findSuccessor(msg);
+    delete msg;
+    KeyValue* msg2 = new KeyValue(key, value, target, 1);
+    Node* node = routing(target);
+    node->insert(msg2);
+    delete msg2;
+    return;
+}
+
+void Chord::insertMultiValues(int length, int* keys, int* values) {
+    for(int i = 0; i < length; i++) {
+        // cout << "key: " << keys[i] << endl;
+        // cout << "value: " << values[i] << endl;
+        this->insertValue(keys[i], values[i]);
+    }
+}
+
+void Chord::findKey(int key) {
+    int loc = rand() % this->nodeNum;
+    Node* node = nodeRouter[loc];
+
+    Message* msg = new Message(key, node->ID, 0);
+    while(msg->flag != 2) {
+        msg = node->lookup(msg);
+        node = routing(msg->nextHop);
+    }
+
+    cout << "--------------------------" << endl;
+    if(node->exist == true){
+        cout << "| Have found the key: " << key << endl;
+        cout << "| Value: " << node->value << endl;
+        cout << "| Found in Node: " << node->ID << endl;
+    } else{
+        cout << "!!!! The key " << key << " does not exist!!!!" << endl;
+    }
+    cout << "--------------------------" << endl;
+}
+
+void Chord::findMultiKeys(int length, int* keys) {
+    for(int i = 0; i < length; i++) {
+        findKey(keys[i]);
     }
 }
 

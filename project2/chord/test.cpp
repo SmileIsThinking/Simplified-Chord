@@ -3,16 +3,29 @@
 #include <iostream>
 // #include <random>
 
+// Test Chord System in m = 7 and size = 128 (which could be changed)
+#define CHORD_M 7
+
+// The number of Node in Chord System
+#define NODE_NUM 5
+
+// The number of tested key value pairs
+#define KEY_LENGTH 10
+
+void generatePairs(int length, int* keys, int* values, int size);
+
 int main() {
-    int m = 7;
-    int size = pow(2, m);
+    int m = CHORD_M;
+    int size = pow(2, CHORD_M);
     Chord* chord = new Chord(m, size);
-    // chord->joinNodes(1);
-    // chord->join(50);
+
+    // int nodeNum = 5;
+    chord->joinNodes(NODE_NUM);
 
 
-    int nodeNum = 15;
-    chord->joinNodes(nodeNum);
+    chord->showNodeList();
+    chord->showNodesFingerTable();
+
     // chord->createFirstNode();
     // chord->join(92);
     // chord->join(68);
@@ -20,9 +33,17 @@ int main() {
     // chord->join(35);
     // chord->join(76);
 
-    chord->showNodeList();
-    chord->showNodesFingerTable();
+
+    const int length = KEY_LENGTH;
+    int* keys = new int[length];
+    int* values = new int[length];
+
+    generatePairs(length, keys, values, size);
+
+    chord->insertMultiValues(length, keys, values);
     chord->showNodesStorage();
+
+    chord->findMultiKeys(length, keys);
 
     // chord->showNodesFingerTable();
     // std::random_device dev;
@@ -62,15 +83,22 @@ int main() {
     return 0;
 }
 
-// int* generateKeys(int num)
-// {
-//     return nullptr;
-// }
+void generatePairs(int length, int* keys, int* values, int size)
+{
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    // distribution in range [1, size-1]
+    std::uniform_int_distribution<std::mt19937::result_type> keyGen(0,size-1);
+    std::uniform_int_distribution<std::mt19937::result_type> valueGen(0, 1000);
 
-// unordered_map<int, int>* generatePairs(int num, int* testKey)
-// {
+    for(int i = 0; i < length; i++){
+        keys[i] = keyGen(rng);
+        values[i] = valueGen(rng);
+        // cout << "key: " << keys[i] << endl;
+        // cout << "value: " << values[i] << endl;
+    }
 
-// }
+}
 
 // void showFinalResults(int* testKey, int* rspValue, int* rspNode)
 // {
