@@ -41,6 +41,7 @@ int Node::getDistance(int ID1, int ID2) {
 }
 
 Message* Node::lookup(Message* msg) {
+    // cout << "lookup" << endl;
     if(msg->flag == 1) {
         msg->flag = 2;
         msg->nextHop = this->ID;
@@ -69,6 +70,9 @@ Message* Node::lookup(Message* msg) {
         } else{
             // find the largest node <= key
             msg->flag = 0;
+            if(msg->nextHop == this->ID) {
+                msg->flag = 1;
+            }
         }
     }
 

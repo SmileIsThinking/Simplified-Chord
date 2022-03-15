@@ -25,6 +25,7 @@ void Chord::createFirstNode() {
 }
 
 Node* Chord::routing(int ID) {
+    // cout << "routing" << endl;
     int index = indexes[ID];
     Node* node = nodeRouter[index];
     return node;
@@ -33,6 +34,7 @@ Node* Chord::routing(int ID) {
 int Chord::findSuccessor(Message* msg) {
     Node* node;
     while(msg->flag != 1) {
+        // cout << "flag: " << msg->flag << endl;
         node = routing(msg->nextHop);
         msg = node->lookup(msg);
     }
@@ -50,14 +52,19 @@ int Chord::findSuccessor(Message* msg) {
 int Chord::getSuccPred(int ID) {
     Node* node = routing(ID);
     int succ = node->fingerTable[0];
+    cout << "Succ: " << succ << endl;
     node = routing(succ);
     return node->predecessor;
 }
 
 void Chord::notifySucc(int ID) {
+    showPred(50);
     Node* node = routing(ID);
+    cout << "notify from: " << node->ID << endl;
     int succ_pred = getSuccPred(ID);
+    cout << "succ_pred: " << succ_pred << endl;
     if(succ_pred == -1) {
+        cout << "update Succ Pred: " << ID << endl;
         updateSuccPred(ID);
         return;
     }
@@ -74,6 +81,16 @@ void Chord::notifySucc(int ID) {
             updateSuccPred(ID);
         }
     }
+    showPred(50);
+    return;
+}
+
+void Chord::showPred(int ID) {
+    Node* node = routing(ID);
+    cout << "--------------" << endl;
+    cout << "show Node Pred: " << node->ID << endl;
+    cout << node->predecessor << endl;
+    cout << "--------------" << endl;
     return;
 }
 
@@ -81,6 +98,7 @@ void Chord::updateSuccPred(int ID) {
     Node* node = routing(ID);
     int succ = node->fingerTable[0];
     node = routing(succ);
+    cout << "update node: " << node->ID << endl;
     node->predecessor = ID;
     // for(int i = 0; i < node->m; i++) {
     //     if(node->fingerTable[i] == node->ID) {
@@ -123,19 +141,25 @@ void Chord::updateFingerTable(int ID) {
 
 
 void Chord::join(int ID) {
-    Node* node = new Node(ID, this->m, this->size);
-    this->nodeNum++;
-    this->nodeRouter.emplace_back(node);
-
+    createNewNode(ID);
+    Node* node = routing(ID);
+    // this->nodeNum++;
+    // this->nodeRouter.emplace_back(node);
+    // this->indexes[ID] =
     // join Chord Network by public node 0
     int nextHop = 0;
     int key = ID+1;
     Message* msg = new Message(key, nextHop, 0);
+    // cout << "message" << endl;
     node->fingerTable[0] = findSuccessor(msg);
 
     for(int i = 0; i < nodeNum; i++) {
+        cout << "predecessor: " << node->predecessor << endl;
+        cout << "successor: " << node->fingerTable[0] << endl;
         notifySucc(node->ID);
         node = routing(node->fingerTable[0]);
+        cout << "predecessor: " << node->predecessor << endl;
+        cout << "successor: " << node->fingerTable[0] << endl;
     }
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);

@@ -7,13 +7,18 @@ int main() {
     int m = 7;
     int size = pow(2, m);
     Chord* chord = new Chord(m, size);
-    // chord->createFirstNode();
-    // chord->showNodesFingerTable();
+    // chord->joinNodes(1);
+    // chord->join(50);
 
-    int nodeNum = 5;
+
+    int nodeNum = 3;
     chord->joinNodes(nodeNum);
 
+    chord->showNodeList();
     chord->showNodesFingerTable();
+    chord->showNodesStorage();
+
+    // chord->showNodesFingerTable();
     // std::random_device dev;
     // std::mt19937 rng(dev());
     // std::uniform_int_distribution<std::mt19937::result_type> dist6(1,6); // distribution in range [1, 6]

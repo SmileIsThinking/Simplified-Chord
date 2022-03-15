@@ -85,6 +85,8 @@ public:
     void showNodesStorage();
     void showFingerTable(int ID);
     void showNodesFingerTable();
+
+    void showPred(int ID);
 };
 
 #endif
