@@ -78,7 +78,7 @@ public:
     void notifySucc(int ID);
     void updateSuccPred(int ID);
     void updateFingerTable(int ID);
-
+    void updateBasicFingerTable(int ID);
     void showNodeList();
 
     void showStorage(int ID);

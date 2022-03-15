@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <chrono>
+#include <thread>
 
 #include "Node.h"
 #include "Message.h"
@@ -48,6 +50,7 @@ Message* Node::lookup(Message* msg) {
     // cout << "lookup" << endl;
     if(msg->flag == 1) {
         cout << "This Hop: " << msg->nextHop << endl;
+        // this_thread::sleep_for(std::chrono::milliseconds(100));
         msg->flag = 2;
         msg->nextHop = this->ID;
         this->exist = ifExist(msg->key);
@@ -58,10 +61,13 @@ Message* Node::lookup(Message* msg) {
     }
     else if(msg->flag == 0) {
         cout << "This Hop: " << msg->nextHop << endl;
+        // this_thread::sleep_for(std::chrono::milliseconds(100));
         int i = 0;
-        int dist1 = getDistance(this->ID, fingerTable[i]);
-        int dist2 = getDistance(this->ID, msg->key);
+        // int dist1 = getDistance(this->ID, fingerTable[i]);
+        // int dist2 = getDistance(this->ID, msg->key);
         for(i = 0; i < m; i++){
+            int dist1 = getDistance(this->ID, fingerTable[i]);
+            int dist2 = getDistance(this->ID, msg->key);
             if(dist1 <= dist2) {
                 msg->nextHop = fingerTable[i];
             }else {
@@ -79,6 +85,7 @@ Message* Node::lookup(Message* msg) {
             if(msg->nextHop == this->ID) {
                 msg->flag = 1;
             }
+
         }
     }
     // cout << "This Hop: " << msg->nextHop << endl;
