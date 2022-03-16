@@ -7,7 +7,7 @@
 #include <chrono>
 #include <thread>
 
-#include "Node.h"
+// #include "Node.h"
 #include "Message.h"
 #include "Chord.h"
 
@@ -15,6 +15,7 @@ using namespace std;
 
 Node::Node(int _ID, int _M, int _SIZE): ID(_ID), m(_M), size(_SIZE)
 {
+    this->fingerTable  = new int[m];
     for(int i = 0; i < m; i++){
         this->fingerTable[i] = this->ID;
     }
@@ -31,7 +32,6 @@ bool Node::ifExist(int key) {
 int Node::getValue(int key) {
     return storage[key];
 }
-
 
 
 // ID1: this->ID
@@ -63,8 +63,6 @@ Message* Node::lookup(Message* msg) {
         // cout << "This Hop: " << msg->nextHop << endl;
         // this_thread::sleep_for(std::chrono::milliseconds(100));
         int i = 0;
-        // int dist1 = getDistance(this->ID, fingerTable[i]);
-        // int dist2 = getDistance(this->ID, msg->key);
         for(i = 0; i < m; i++){
             int dist1 = getDistance(this->ID, fingerTable[i]);
             int dist2 = getDistance(this->ID, msg->key);

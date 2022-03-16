@@ -80,6 +80,9 @@ int main() {
     // if(msg->flag == 2){
 
     // }
+    delete[] keys;
+    delete[] values;
+
     return 0;
 }
 
@@ -94,8 +97,6 @@ void generatePairs(int length, int* keys, int* values, int size)
     for(int i = 0; i < length; i++){
         keys[i] = keyGen(rng);
         values[i] = valueGen(rng);
-        // cout << "key: " << keys[i] << endl;
-        // cout << "value: " << values[i] << endl;
     }
 
 }

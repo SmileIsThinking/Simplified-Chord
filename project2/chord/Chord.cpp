@@ -4,7 +4,7 @@
 #include <vector>
 #include <random>
 #include "Chord.h"
-#include "Node.h"
+// #include "Node.h"
 // #include <crypto++/sha.h>
 
 using namespace std;
@@ -100,18 +100,7 @@ void Chord::updateSuccPred(int ID) {
     node = routing(succ);
     // cout << "update node: " << node->ID << endl;
     node->predecessor = ID;
-    // cout << "new pred: " << node->predecessor << endl;
-    // for(int i = 0; i < node->m; i++) {
-    //     if(node->fingerTable[i] == node->ID) {
-    //         int dist1 = node->getDistance(node->ID, node->ID + pow(2, i));
-    //         int dist2 = node->getDistance(node->predecessor, node->ID + pow(2, i));
-    //         if(dist1 < dist2){
-    //             node->fingerTable[i] = node->predecessor;
-    //         }else {
-    //             break;
-    //         }
-    //     }
-    // }
+
     // if the successor is its self, means it needs to update
     if(node->fingerTable[0] == node->ID) {
         node->fingerTable[0] = node->predecessor;
@@ -172,9 +161,7 @@ void Chord::join(int ID) {
         notifySucc(node->ID);
         node = routing(node->fingerTable[0]);
     }
-    // showPred(0);
-    // showPred(80);
-    // showPred(102);
+
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);
         updateBasicFingerTable(node->ID);
@@ -292,7 +279,7 @@ void Chord::showFingerTable(int ID) {
     Node* node = routing(ID);
     cout << "--------------------------" << endl;
     cout << " Finger Table of node " << ID << endl;
-    for(int i = 0; i < M; i++) {
+    for(int i = 0; i < this->m; i++) {
         cout << i << ": " << node->fingerTable[i] << endl;
     }
     cout << "--------------------------" << endl;

@@ -18,7 +18,7 @@ public:
     int ID;
 
     // finger table
-    int fingerTable[7];
+    int* fingerTable;
     int predecessor = -1;
 
     // key-value storage
@@ -33,61 +33,64 @@ public:
     // return: next hop, possible stored server ID
     bool ifExist(int key);
     int getValue(int key);
+
+    // compute the distance in Chord Ring
     int getDistance(int ID1, int ID2);
 
+    // send lookup message to another node
     Message* lookup(Message* msg);
+    // send insert message to another node
     KeyValue* insert(KeyValue* msg);
-
 };
 
 
 class Chord {
 public:
-
     // meta data
     // only used when a new node wants to know an existing node in Chord Network
     int m;
     int size;
 
-    // Node nodeRouter[SIZE];
     vector<Node*> nodeRouter;
-    // vector<int> nodeList;
     int nodeNum = 0;
 
     // the map from node ID to vector index
     unordered_map<int, int> indexes;
 
-    int value; // used to get the final result
 
+    // Function
     Chord(int _M, int _SIZE);
 
     void createNewNode(int ID);
     void createFirstNode();
 
-
     Node* routing(int ID);
 
     int findSuccessor(Message* msg);
 
-
-    void join(int ID);
-    void joinNodes(int num);
-
     // get node ID's successor's predecessor
+    // update Notes' finger table/ predecessor/ successor
     int getSuccPred(int ID);
+
+    // stabilization function
     void notifySucc(int ID);
     void updateSuccPred(int ID);
-    void updateFingerTable(int ID);
     void updateBasicFingerTable(int ID);
+    void updateFingerTable(int ID);
+
+    // ****** API provided for user ******//
+    void join(int ID);           // node ID join Chord
+    void joinNodes(int num);     // generate multiple(num) nodes to join Chord
+
+    // for user's check
+    void showStorage(int ID);                  // show key-value storage of node ID
+    void showNodesStorage();                   // show key-value storage of all nodes
+    void showFingerTable(int ID);              // show finger table of node ID
+    void showNodesFingerTable();               // show finger table of all nodes
     void showNodeList();
+    void showPred(int ID);                     // show predcessor of node ID
 
-    void showStorage(int ID);
-    void showNodesStorage();
-    void showFingerTable(int ID);
-    void showNodesFingerTable();
-
-    void showPred(int ID);
-
+    // insert and lookup API
     void insertValue(int key, int value);
     void insertMultiValues(int length, int* keys, int* values);
     void findKey(int key);
