@@ -12,7 +12,7 @@ The project is conducted for the UW-Madison CS740 AS2, re-implementing Chord sca
 
 
 ## What does my simple Chord support?
-In this project, I reproduce a simple program to simulate the distributed Chord System. Instead of using RPC for communicaition, this program has only one process: Chord, which has different server nodes and these nodes are "independent". Nodes communicate to each other using "message" (defined in Message.h) and Chord plays a role as a router, directly routing message to the next hop. As for stabilization, this program simulates a single-thread, sequential stabilization algorithm. The stabilization algorithm contains two parts: pred/succ update and full finger table update. Stabilization functions are called when a new node joins Chord Network and will loop around every node(send message until the message comes back to the new joined node) in Chord to update each node (Stabilization does not work periodly).
+In this project, I reproduce a simple program to simulate the distributed Chord System. Instead of using RPC for communicaition, this program has only one process: Chord, which has different server nodes and these nodes are "independent". Nodes communicate to each other using "message" (defined in Message.h) and Chord plays a role as a router, directly routing message to the next hop. As for stabilization, this program simulates a sequential updated stabilization algorithm. The stabilization algorithm contains two parts: pred/succ update and full finger table update. Stabilization functions are called when a new node joins Chord Network and will loop around every node(send message until the message comes back to the new joined node) in Chord to update each node (Stabilization does not work periodly).
 
 
 ### My Chord supports
@@ -31,18 +31,19 @@ In this project, I reproduce a simple program to simulate the distributed Chord 
 * Node Delete
 * Node and Link Failure
 * Key-Value Migration
-* Distributed Stabilization Algorithm
+* Concurrent Stabilization Algorithm
 * ...
 
 ## Usage
 * Prerequisite: g++ 7.5.0 (Every C++ compiler that supports C++11 should work.)
 * Build:
 ```
-source ./chord/build.sh
+cd chord
+source build.sh
 ```
-* Test:
+* Test (in chord directory):
 ```
-./chord/test
+./test
 ```
 
 
@@ -50,7 +51,7 @@ source ./chord/build.sh
 * **Message.h** - class Message is used to as lookup message between nodes. class KeyValue is used as insert message to nodes.
 * **Node.cpp** - lookup and insert functions are implemented here as the communication between nodes.
 * **Chord.cpp** - Play a role of "Router". Routing message to another node according to "nextHop" in message. Provide API for users.
-
+* **test.cpp** - randomly generated nodes/keys/values to demonstrate its correctness and efficiency.
 
 ## API provided
 ### Chord Operation
@@ -84,6 +85,8 @@ source ./chord/build.sh
   - insert key-value pairs
   - lookup and show results (show metadata of chord nodes)
 
+* ./chord/test.cpp provides a randomly generated node/key/value test (Hardcoded: default Chord size 128, 5 nodes and 10 key-value pairs). It could be modified using API to build your own user test.
+
 * a simple test example (can be found in ./chord/test.cpp)
 ```
     int* keys = new int[length];
@@ -107,7 +110,6 @@ source ./chord/build.sh
     // find the stored node number of keys and show the result
     chord->findMultiKeys(length, keys);
 ```
-
 
 ## Author
 * Shichun Yu - syu274@wisc.edu

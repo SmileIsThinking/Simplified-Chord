@@ -23,7 +23,6 @@ void Chord::createFirstNode() {
 }
 
 Node* Chord::routing(int ID) {
-    // cout << "routing" << endl;
     int index = indexes[ID];
     Node* node = nodeRouter[index];
     return node;
@@ -32,7 +31,6 @@ Node* Chord::routing(int ID) {
 int Chord::findSuccessor(Message* msg) {
     Node* node;
     while(msg->flag != 1) {
-        // cout << "flag: " << msg->flag << endl;
         node = routing(msg->nextHop);
         msg = node->lookup(msg);
     }
@@ -135,11 +133,9 @@ void Chord::join(int ID) {
     int nextHop = 0;
     int key = ID+1;
     Message* msg = new Message(key, nextHop, 0);
-    // cout << "message" << endl;
     node->fingerTable[0] = findSuccessor(msg);
 
     for(int i = 0; i < nodeNum; i++) {
-        // cout << "Your turn to notify: " << node->ID << endl;
         notifySucc(node->ID);
         node = routing(node->fingerTable[0]);
     }
@@ -147,18 +143,15 @@ void Chord::join(int ID) {
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);
         updateBasicFingerTable(node->ID);
-        // cout << "You have modify the basic fingertable: " << node->ID << endl;
-        // showFingerTable(node->ID);
     }
 
     for(int i = 0; i < nodeNum; i++) {
         node = routing(node->fingerTable[0]);
         updateFingerTable(node->ID);
-        // cout << "You have modify the fingertable: " << node->ID << endl;
-        // showFingerTable(node->ID);
     }
 }
 
+// node with same ID would be rejected to join
 void Chord::joinNodes(int num) {
 
     createFirstNode();
@@ -177,11 +170,13 @@ void Chord::joinNodes(int num) {
 }
 
 void Chord::insertValue(int key, int value) {
-    Message* msg = new Message(key, 0, 0);
+    int loc = rand() % this->nodeNum;
+    Node* node = nodeRouter[loc];
+    Message* msg = new Message(key, node->ID, 0);
     int target = findSuccessor(msg);
     delete msg;
     KeyValue* msg2 = new KeyValue(key, value, target, 1);
-    Node* node = routing(target);
+    node = routing(target);
     node->insert(msg2);
     delete msg2;
     return;

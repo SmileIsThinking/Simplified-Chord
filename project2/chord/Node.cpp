@@ -91,6 +91,7 @@ Message* Node::lookup(Message* msg) {
 KeyValue* Node::insert(KeyValue* msg) {
 
     if(msg->flag == 1) {
+        // cout << "!!!!!!!This hop: " << msg->nextHop << endl;
         msg->flag = 2;
         msg->nextHop = this->ID;
 
@@ -98,6 +99,7 @@ KeyValue* Node::insert(KeyValue* msg) {
         return msg;
     }
     else if(msg->flag == 0) {
+        // cout << "!!!!!!!This hop: " << msg->nextHop << endl;
         int i = 0;
         for(i = 0; i < m; i++){
         int dist1 = getDistance(this->ID, fingerTable[i]);
