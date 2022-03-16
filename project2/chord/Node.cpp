@@ -7,7 +7,6 @@
 #include <chrono>
 #include <thread>
 
-// #include "Node.h"
 #include "Message.h"
 #include "Chord.h"
 
@@ -47,7 +46,6 @@ int Node::getDistance(int ID1, int ID2) {
 }
 
 Message* Node::lookup(Message* msg) {
-    // cout << "lookup" << endl;
     if(msg->flag == 1) {
         // cout << "This Hop: " << msg->nextHop << endl;
         // this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -86,7 +84,6 @@ Message* Node::lookup(Message* msg) {
 
         }
     }
-    // cout << "This Hop: " << msg->nextHop << endl;
 
     return msg;
 }

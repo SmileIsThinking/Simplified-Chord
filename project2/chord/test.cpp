@@ -1,7 +1,6 @@
 #include "Chord.h"
 #include <random>
 #include <iostream>
-// #include <random>
 
 // Test Chord System in m = 7 and size = 128 (which could be changed)
 #define CHORD_M 7
@@ -26,13 +25,6 @@ int main() {
     chord->showNodeList();
     chord->showNodesFingerTable();
 
-    // chord->createFirstNode();
-    // chord->join(92);
-    // chord->join(68);
-    // chord->join(15);
-    // chord->join(35);
-    // chord->join(76);
-
 
     const int length = KEY_LENGTH;
     int* keys = new int[length];
@@ -45,43 +37,9 @@ int main() {
 
     chord->findMultiKeys(length, keys);
 
-    // chord->showNodesFingerTable();
-    // std::random_device dev;
-    // std::mt19937 rng(dev());
-    // std::uniform_int_distribution<std::mt19937::result_type> dist6(1,6); // distribution in range [1, 6]
-
-    // for(int i = 0; i < 15; i++){
-    //     std::cout << dist6(rng) << std::endl;
-    // }
-
-    // chord.generateNodes();
-    // chord.showNodeList();
-
-    // int* testKey = generateKeys(int num);
-    // unordered_map<int, int>* testKeyValue = generatePairs(int num);
-    // showTestKeyValue(testKeyValue);
-
-    // insertToChord(&chord, testKeyValue);
-    // chord.showNodeStorage();
-
-    // int* rspValue;
-    // int* rspNode;
-
-
-    // keyQuery(testKey, rspValue, rspNode);
-
-    // showFinalResults(testKey, rspValue, rspNode);
-    // compareToTruth();
-
-    // unique_ptr<Message> msg(new Message());
-    // while(msg->flag != 2) {
-
-    // }
-    // if(msg->flag == 2){
-
-    // }
     delete[] keys;
     delete[] values;
+    delete chord;
 
     return 0;
 }
@@ -100,8 +58,3 @@ void generatePairs(int length, int* keys, int* values, int size)
     }
 
 }
-
-// void showFinalResults(int* testKey, int* rspValue, int* rspNode)
-// {
-
-// }

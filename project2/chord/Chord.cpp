@@ -4,8 +4,6 @@
 #include <vector>
 #include <random>
 #include "Chord.h"
-// #include "Node.h"
-// #include <crypto++/sha.h>
 
 using namespace std;
 
@@ -41,13 +39,6 @@ int Chord::findSuccessor(Message* msg) {
     return msg->nextHop;
 }
 
-// // get node ID's successor's predecessor
-// int Chord::getSuccPred(int ID) {
-//     Node node* = routing(ID);
-//     int succ =
-//     Node node* =
-// }
-
 
 int Chord::getSuccPred(int ID) {
     Node* node = routing(ID);
@@ -59,11 +50,8 @@ int Chord::getSuccPred(int ID) {
 
 void Chord::notifySucc(int ID) {
     Node* node = routing(ID);
-    // cout << "notify from: " << node->ID << endl;
     int succ_pred = getSuccPred(ID);
-    // cout << "succ_pred: " << succ_pred << endl;
     if(succ_pred == -1) {
-        // cout << "update Succ Pred: " << ID << endl;
         updateSuccPred(ID);
         return;
     }
@@ -81,7 +69,6 @@ void Chord::notifySucc(int ID) {
             updateSuccPred(ID);
         }
     }
-    // showPred(50);
     return;
 }
 
@@ -98,7 +85,6 @@ void Chord::updateSuccPred(int ID) {
     Node* node = routing(ID);
     int succ = node->fingerTable[0];
     node = routing(succ);
-    // cout << "update node: " << node->ID << endl;
     node->predecessor = ID;
 
     // if the successor is its self, means it needs to update
@@ -111,11 +97,9 @@ void Chord::updateSuccPred(int ID) {
 // fix finger table:
 // if distance <= successor, this finger table value is successor
 // if distance > successor, send query to successor.
-
 void Chord::updateBasicFingerTable(int ID) {
     Node* node = routing(ID);
     for(int i = 1; i < node->m; i++) {
-        // cout << "m: " << node->m << endl;
         int dist1 = pow(2, i);
         int dist2 = node->getDistance(node->ID, node->fingerTable[0]);
         if(dist1 <= dist2) {
@@ -128,14 +112,12 @@ void Chord::updateBasicFingerTable(int ID) {
 void Chord::updateFingerTable(int ID) {
     Node* node = routing(ID);
     for(int i = 1; i < node->m; i++) {
-        // cout << "m: " << node->m << endl;
         int dist1 = pow(2, i);
         int dist2 = node->getDistance(node->ID, node->fingerTable[0]);
         if(dist1 <= dist2) {
             node->fingerTable[i] = node->fingerTable[0];
         }else {
             int key = (int)(node->ID + pow(2, i)) % (node->size);
-            // cout << "i: " << i << endl;
             int nextHop = node->fingerTable[i-1];
             Message* msg = new Message(key, nextHop, 0);
             node->fingerTable[i] = findSuccessor(msg);
@@ -189,8 +171,6 @@ void Chord::joinNodes(int num) {
     for(int i = 0; i < num-1; i++) {
         int newID = dist(rng);
         if(indexes.find(newID) == indexes.end()){
-            cout << "!!!!!!!" << endl;
-            cout << "New Node: " << newID << endl;
             join(newID);
         }
     }
@@ -209,8 +189,6 @@ void Chord::insertValue(int key, int value) {
 
 void Chord::insertMultiValues(int length, int* keys, int* values) {
     for(int i = 0; i < length; i++) {
-        // cout << "key: " << keys[i] << endl;
-        // cout << "value: " << values[i] << endl;
         this->insertValue(keys[i], values[i]);
     }
 }

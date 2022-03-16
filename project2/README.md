@@ -12,7 +12,7 @@ The project is conducted for the UW-Madison CS740 AS2, re-implementing Chord sca
 
 
 ## What does my simple Chord support?
-In this project, I reproduce a simple program to simulate the distributed Chord System. Instead of using RPC for communicaition, this program has only one process: Chord, which has different server nodes and these nodes are "independent". Nodes communicate to each other using "message" (defined in Message.h) and Chord plays a role as a router, directly routing message to the next hop. As for stabilization, this program simulates a single-thread, sequential stabilization algorithm. The stabilization algorithm contains two parts: pred/succ update and full finger table update. Stabilization functions are called when a new node joins Chord Network (Stabilization does not work periodly).
+In this project, I reproduce a simple program to simulate the distributed Chord System. Instead of using RPC for communicaition, this program has only one process: Chord, which has different server nodes and these nodes are "independent". Nodes communicate to each other using "message" (defined in Message.h) and Chord plays a role as a router, directly routing message to the next hop. As for stabilization, this program simulates a single-thread, sequential stabilization algorithm. The stabilization algorithm contains two parts: pred/succ update and full finger table update. Stabilization functions are called when a new node joins Chord Network and will loop around every node(send message until the message comes back to the new joined node) in Chord to update each node (Stabilization does not work periodly).
 
 
 ### My Chord supports
