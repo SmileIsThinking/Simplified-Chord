@@ -4,7 +4,7 @@
 
 The project is conducted for the UW-Madison CS740 AS2, re-implementing Chord scalable lookup system based on this paper https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf.
 
-**github link**: https://github.com/SmileIsThinking/cs740/tree/main/project2
+**Github link**: https://github.com/SmileIsThinking/cs740/tree/main/project2
 
 
 ## Background
